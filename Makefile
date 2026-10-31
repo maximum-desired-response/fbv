@@ -1,22 +1,18 @@
 #
-# Makefile
-#
 # Makefile for fbv
+#
 
 include Make.conf
 
-CC	= zig cc
-CFLAGS  = -O2 -Wall -D_GNU_SOURCE
-CFLAGS += `pkgconf --cflags --libs libpng`
-CFLAGS += `pkgconf --cflags --libs libjpeg`
-CFLAGS += -lgif
-#-I/usr/include/libpng16 -lpng16
+CC      = gcc
+CFLAGS  = -O2 -Wall -D_GNU_SOURCE -static
+CFLAGS += `pkgconf --cflags libpng libjpeg`
+LIBS   += `pkgconf --static --libs libpng libjpeg` -lgif -lz -lm
 
-SOURCES	= main.c jpeg.c gif.c png.c bmp.c fb_display.c transforms.c
-OBJECTS	= ${SOURCES:.c=.o}
+SOURCES = main.c jpeg.c gif.c png.c bmp.c fb_display.c transforms.c
+OBJECTS = ${SOURCES:.c=.o}
 
-OUT	= fbv
-#LIBS	= -lungif -L/usr/X11R6/lib -ljpeg -lpng
+OUT     = fbv
 
 all: $(OUT)
 	@echo Build DONE.
@@ -32,9 +28,11 @@ distclean: clean
 	rm -f $(OUT) config.h
 
 install: $(OUT)
+	mkdir -p $(DESTDIR)$(bindir)
+	mkdir -p $(DESTDIR)$(mandir)/man1
 	cp $(OUT) $(DESTDIR)$(bindir)
 	gzip -9c $(OUT).1 > $(DESTDIR)$(mandir)/man1/$(OUT).1.gz
 
-uninstall: $(DESTDIR)$(bindir)/$(OUT)
+uninstall:
 	rm -f $(DESTDIR)$(bindir)/$(OUT)
 	rm -f $(DESTDIR)$(mandir)/man1/$(OUT).1.gz

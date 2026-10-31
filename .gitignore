@@ -1,0 +1,21 @@
+# Local installation staging directory
+build/
+
+# Final static distribution archives
+fbv-static-*.tar.gz
+fbv-*.tar.gz
+
+# Generated configuration profiles
+Make.conf
+config.h
+config.log
+
+# Intermediate compiler object tracking files
+*.o
+fbv
+
+# Text editor backups and swap points
+*~
+*.bak
+.*.swp
+core
